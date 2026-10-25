@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>THE INTERROGATION</title>
+<style>
+:root{--bg:#0b0b0d;--card:#141418;--fg:#e8e6e1;--dim:#8a8780;--acc:#d62e2e;--ok:#4fa36b;--line:#26262c;--lamp:#f2d98a;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(ellipse at 50% -10%,rgba(242,217,138,.12),transparent 55%),var(--bg);color:var(--fg);font:16px/1.5 Georgia,"Times New Roman",serif}
+.wrap{max-width:760px;margin:0 auto;padding:16px;min-height:100%;display:flex;flex-direction:column;gap:12px}
+h1{font:700 clamp(28px,7vw,52px)/1 "Courier New",monospace;letter-spacing:.15em;margin:8px 0 0;text-align:center}
+h1 span{color:var(--acc)}
+.sub{text-align:center;color:var(--dim);margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.hide{display:none!important}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:10px 16px;border-radius:8px}
+button.main{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700;letter-spacing:.05em}
+button:disabled{opacity:.5;cursor:default}
+.tag{font:12px "Courier New",monospace;color:var(--acc);letter-spacing:.15em}
+.story{font-size:17px}
+#case{font-size:14px;color:var(--dim)}
+#case b{color:var(--fg)}
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:10px;font:12px "Courier New",monospace;color:var(--dim)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;width:50%;transition:width .6s,background .6s}
+#log{flex:1;min-height:220px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.m{padding:10px 13px;border-radius:10px;max-width:88%;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);align-self:flex-start}
+.me{background:rgba(127,127,127,.15);align-self:flex-end}
+.who{font:11px "Courier New",monospace;color:var(--dim);display:block;margin-bottom:2px;letter-spacing:.1em}
+.ev{font:13px "Courier New",monospace;color:var(--lamp);border:1px dashed var(--lamp);border-radius:6px;padding:6px 9px;align-self:flex-start;max-width:88%}
+.row{display:flex;gap:8px}
+textarea{flex:1;font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:10px;resize:none;min-height:48px}
+#board{font:13px "Courier New",monospace;color:var(--lamp)}
+#board div{margin-top:4px}
+.small{font-size:13px;color:var(--dim)}
+.end{text-align:center}
+.end h2{font:700 30px "Courier New",monospace;margin:0 0 8px}
+@keyframes fl{0%,100%{opacity:1}45%{opacity:.82}50%{opacity:.5}55%{opacity:.9}}
+body.dim .wrap{animation:fl 3s infinite}
+body.dim{background:radial-gradient(ellipse at 50% -10%,rgba(214,46,46,.18),transparent 55%),var(--bg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>THE <span>INTERROGATION</span></h1>
+<p class="sub">Tu esi nevainīgs. Vai tiešām?</p>
+
+<div id="intro" class="card">
+<p>Tevi ieved telpā bez logiem. Uz galda deg viena lampa. Pretī sēž izmeklētājs Vilks. Viņš zina, ka to izdarīji tu.</p>
+<p class="small">Tev jāpierāda sava nevainība: jāpaliek mierīgam, jāpretrunā pašam sev nekad un jāneļauj sevi ievilkt viņa stāstā. Jo ilgāk tu esi telpā, jo grūtāk ir izkļūt. Ja ticamība nokrītas līdz nullei vai tu atzīsties, tu esi zaudējis.</p>
+<button class="main" id="go">SĀKT</button>
+<p class="small hide" id="err"></p>
+</div>
+
+<div id="brief" class="card hide">
+<span class="tag">LIETAS MAPE</span>
+<h2 id="bt" style="margin:6px 0 10px"></h2>
+<p class="story" id="bs"></p>
+<p class="small">Tevi aizturēja un nogādāja nopratināšanai. Tu zini, ka neesi vainīgs, bet pierādījumi izskatās slikti.</p>
+<button class="main" id="enter">IEIET NOPRATINĀŠANAS TELPĀ</button>
+</div>
+
+<div id="game" class="hide">
+<div class="card" id="case"></div>
+<div class="meters">
+<div>TICAMĪBA <span id="cv">50</span><div class="bar"><i id="cb"></i></div></div>
+<div>SPIEDIENS <span id="pv">0</span><div class="bar"><i id="pb" style="background:var(--acc)"></i></div></div>
+</div>
+<div id="log" class="card" aria-live="polite"></div>
+<div class="row">
+<textarea id="inp" rows="2" maxlength="500" placeholder="Tava atbilde…"></textarea>
+<button class="main" id="send">ATBILDĒT</button>
+</div>
+<div class="row"><button id="law" class="small">Pieprasīt advokātu</button><button id="deny" class="small">Es to nedarīju.</button></div>
+<div class="card hide" id="boardC"><span class="small">LIETAS MATERIĀLI</span><div id="board"></div></div>
+</div>
+
+<div id="over" class="card end hide">
+<h2 id="ot"></h2><p id="od"></p><button class="main" id="again">NOPRATINĀŠANA NO JAUNA</button>
+</div>
+</div>
+
+<script>
+const $=i=>document.getElementById(i);
+let CASE,msgs,cred,turn,busy,skip=false;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+function add(cls,txt,who){
+  const d=document.createElement("div");d.className="m "+cls;
+  if(who){const w=document.createElement("span");w.className="who";w.textContent=who;d.appendChild(w)}
+  const t=document.createElement("span");d.appendChild(t);
+  $("log").appendChild(d);$("log").scrollTop=1e9;return t;
+}
+function typeOut(el,txt){
+  return new Promise(res=>{let i=0;skip=false;
+    (function n(){if(skip||i>=txt.length){el.textContent=txt;$("log").scrollTop=1e9;return res()}
+      el.textContent=txt.slice(0,++i);$("log").scrollTop=1e9;setTimeout(n,14)})();
+  });
+}
+function paint(){
+  const p=clamp(14+turn*5+(cred<40?18:0),0,100);
+  $("cv").textContent=cred;$("pv").textContent=p;
+  $("cb").style.width=cred+"%";$("cb").style.background=cred<35?"var(--acc)":cred<65?"var(--lamp)":"var(--ok)";
+  $("pb").style.width=p+"%";
+  document.body.classList.toggle("dim",cred<35);
+}
+function lock(v){busy=v;["send","law","deny","inp"].forEach(i=>$(i).disabled=v)}
+
+async function api(){
+  const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:CASE.id,msgs})});
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok)throw new Error(j.error||"Servera kļūda");
+  return j;
+}
+async function ask(text){
+  lock(true);
+  msgs.push({role:"user",content:text});
+  const wait=add("ai","Vilks lūkojas uz tevi…","VILKS");
+  let o;
+  try{o=await api()}
+  catch(e){
+    msgs.pop();wait.parentNode.remove();
+    add("ai","Vilks uz brīdi apklusa: "+e.message+" Mēģini vēlreiz.","SISTĒMA");
+    lock(false);return;
+  }
+  msgs.push({role:"assistant",content:JSON.stringify(o)});
+  await typeOut(wait,o.say);
+  if(o.evidence&&o.evidence.trim()){
+    const e=document.createElement("div");e.className="ev";e.textContent="📎 "+o.evidence;$("log").appendChild(e);
+    const b=document.createElement("div");b.textContent="• "+o.evidence;$("board").appendChild(b);$("boardC").classList.remove("hide");
+  }
+  if(turn>0){
+    let d=clamp(Math.round(+o.delta||0),-20,12);
+    if(d>0)d=Math.round(d*Math.max(.35,1-turn*.05));
+    cred=clamp(cred+d-(turn>3?1:0),0,100);
+    if(cred>=100&&turn<6)cred=92;
+    paint();
+    if(o.confessed)return finish("lose","Tu atzinies.","Tu to nedarīji, bet tagad tas ir ierakstīts protokolā. Vilks aizver mapi un pasmaida.");
+    if(cred<=0)return finish("lose","Tu parakstīji.","Tu vairs nezināji, kas bija patiesība. Vilks pasniedza pildspalvu, un tu to paņēmi.");
+    if(cred>=100)return finish("win","Durvis atveras.","Vilks noliec skatienu: „Šoreiz tev ir veicies.“ Tu izej gaitenī un tikai tad saproti, ka rokas joprojām trīc. Vai viņš tiešām tev noticēja?");
+    if(turn>=24)return finish("lose","Tevi aizved.","Laiks beidzās, un Vilks neticēja. Tevi paturēs apcietinājumā līdz tiesai.");
+  }
+  lock(false);$("inp").focus();
+}
+function finish(k,t,d){
+  lock(true);$("over").classList.remove("hide");$("over").scrollIntoView({behavior:"smooth"});
+  $("ot").textContent=t;$("ot").style.color=k==="win"?"var(--ok)":"var(--acc)";
+  $("od").textContent=d+" (Gājieni: "+turn+")";document.body.classList.remove("dim");
+}
+function send(text){
+  if(busy||!text)return;
+  add("me",text,"TU");turn++;
+  ask(`[gājiens ${turn}, ticamība ${cred}/100] ${text}`);
+}
+async function loadCase(){
+  $("go").disabled=true;$("err").classList.add("hide");
+  try{
+    const r=await fetch("/api/case");if(!r.ok)throw 0;
+    CASE=await r.json();
+    $("bt").textContent=CASE.title;$("bs").textContent=CASE.story;
+    $("intro").classList.add("hide");$("brief").classList.remove("hide");
+  }catch(e){
+    $("err").textContent="Neizdevās ielādēt lietu. Pārbaudi, vai serveris darbojas.";$("err").classList.remove("hide");
+  }
+  $("go").disabled=false;
+}
+async function enter(){
+  cred=50;turn=0;msgs=[];
+  $("brief").classList.add("hide");$("over").classList.add("hide");$("game").classList.remove("hide");
+  $("log").textContent="";$("board").textContent="";$("boardC").classList.add("hide");
+  $("case").innerHTML="<b>LIETA:</b> ";$("case").appendChild(document.createTextNode(CASE.title+". "+CASE.story));
+  paint();
+  await ask("[gājiens 0, ticamība 50/100] Spēle sākas. Spēlētājs tikko tika ievests telpā. Sāc nopratināšanu: īsi uzsāc sarunu un uzdod pirmo jautājumu.");
+}
+$("go").onclick=loadCase;
+$("enter").onclick=enter;
+$("again").onclick=()=>{$("game").classList.add("hide");$("over").classList.add("hide");$("intro").classList.remove("hide");paint()};
+$("send").onclick=()=>{const v=$("inp").value.trim();$("inp").value="";send(v)};
+$("inp").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("send").click()}});
+$("law").onclick=()=>send("Es pieprasu advokātu.");
+$("deny").onclick=()=>send("Es to nedarīju.");
+$("log").addEventListener("click",()=>{skip=true});
+</script>
+</body>
+</html>
