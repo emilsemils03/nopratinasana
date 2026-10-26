@@ -3,186 +3,485 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>THE INTERROGATION</title>
+<meta name="theme-color" content="#eae3d7">
+<title>THE INTERROGATION — Nopratināšanas istaba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0b0d;--card:#141418;--fg:#e8e6e1;--dim:#8a8780;--acc:#d62e2e;--ok:#4fa36b;--line:#26262c;--lamp:#f2d98a;color-scheme:dark}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{background:radial-gradient(ellipse at 50% -10%,rgba(242,217,138,.12),transparent 55%),var(--bg);color:var(--fg);font:16px/1.5 Georgia,"Times New Roman",serif}
-.wrap{max-width:760px;margin:0 auto;padding:16px;min-height:100%;display:flex;flex-direction:column;gap:12px}
-h1{font:700 clamp(28px,7vw,52px)/1 "Courier New",monospace;letter-spacing:.15em;margin:8px 0 0;text-align:center}
-h1 span{color:var(--acc)}
-.sub{text-align:center;color:var(--dim);margin:0 0 8px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
-.hide{display:none!important}
-button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:10px 16px;border-radius:8px}
-button.main{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700;letter-spacing:.05em}
-button:disabled{opacity:.5;cursor:default}
-.tag{font:12px "Courier New",monospace;color:var(--acc);letter-spacing:.15em}
-.story{font-size:17px}
-#case{font-size:14px;color:var(--dim)}
-#case b{color:var(--fg)}
-.meters{display:grid;grid-template-columns:1fr 1fr;gap:10px;font:12px "Courier New",monospace;color:var(--dim)}
-.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:4px}
-.bar i{display:block;height:100%;width:50%;transition:width .6s,background .6s}
-#log{flex:1;min-height:220px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.m{padding:10px 13px;border-radius:10px;max-width:88%;white-space:pre-wrap;overflow-wrap:anywhere}
-.ai{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);align-self:flex-start}
-.me{background:rgba(127,127,127,.15);align-self:flex-end}
-.who{font:11px "Courier New",monospace;color:var(--dim);display:block;margin-bottom:2px;letter-spacing:.1em}
-.ev{font:13px "Courier New",monospace;color:var(--lamp);border:1px dashed var(--lamp);border-radius:6px;padding:6px 9px;align-self:flex-start;max-width:88%}
-.row{display:flex;gap:8px}
-textarea{flex:1;font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:10px;resize:none;min-height:48px}
-#board{font:13px "Courier New",monospace;color:var(--lamp)}
-#board div{margin-top:4px}
-.small{font-size:13px;color:var(--dim)}
-.end{text-align:center}
-.end h2{font:700 30px "Courier New",monospace;margin:0 0 8px}
-@keyframes fl{0%,100%{opacity:1}45%{opacity:.82}50%{opacity:.5}55%{opacity:.9}}
-body.dim .wrap{animation:fl 3s infinite}
-body.dim{background:radial-gradient(ellipse at 50% -10%,rgba(214,46,46,.18),transparent 55%),var(--bg)}
+:root {
+  color-scheme: light;
+  --bg:#eae3d7; --paper:#f8f4eb; --card:#f5f0e6; --ink:#24211d;
+  --muted:#716b62; --faint:#a29a8e; --line:#d3c8b8;
+  --red:#ae3028; --red-faint:rgba(174,48,40,.1); --green:#287657;
+  --gold:#a17a40; --shadow:rgba(43,30,20,.09);
+}
+:root[data-theme="dark"] {
+  color-scheme:dark;
+  --bg:#13110f; --paper:#1e1a16; --card:#211d19; --ink:#f2e9db;
+  --muted:#b2a697; --faint:#746b5d; --line:#39322b;
+  --red:#f05a4b; --red-faint:rgba(240,90,75,.12); --green:#7ab992;
+  --gold:#d7ac64; --shadow:rgba(0,0,0,.32);
+}
+* {box-sizing:border-box}
+[hidden],.hide {display:none!important}
+html {scroll-behavior:smooth}
+body {
+  margin:0; min-height:100vh; color:var(--ink); background:
+    radial-gradient(ellipse 65% 38% at 50% -8%,rgba(201,138,48,.15),transparent 80%),
+    repeating-linear-gradient(0deg,transparent 0,transparent 4px,rgba(0,0,0,.012) 5px),var(--bg);
+  font-family:"Poppins",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;line-height:1.65;transition:background-color .25s,color .25s;
+}
+button,textarea {font:inherit}
+button {cursor:pointer;touch-action:manipulation}
+button:disabled {opacity:.48;cursor:wait}
+button:focus-visible,textarea:focus-visible {outline:2px solid var(--red);outline-offset:3px}
+.wrap {width:min(100% - 36px,760px);margin:0 auto;padding:26px 0 max(40px,env(safe-area-inset-bottom));}
+header {padding:0 0 24px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.topline {display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}
+.micro,.tag,.eyebrow {font-size:10px;font-weight:700;letter-spacing:.19em;text-transform:uppercase}
+.micro {color:var(--muted)}
+.red-dot {display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:8px;box-shadow:0 0 0 4px var(--red-faint)}
+.theme-button {border:1px solid var(--line);border-radius:2px;background:transparent;color:var(--muted);padding:7px 10px;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.theme-button:hover {color:var(--ink);border-color:var(--muted)}
+h1 {font-size:clamp(29px,6.5vw,52px);line-height:1.08;letter-spacing:.025em;font-weight:800;margin:0;overflow-wrap:anywhere}
+h1 span {display:block;color:var(--red)}
+.sub {color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin:13px 0 0}
+.card {background:var(--paper);border:1px solid var(--line);padding:22px;box-shadow:0 5px 24px var(--shadow)}
+.card + .card {margin-top:12px}
+.card-title {margin:0 0 12px;font-size:23px;line-height:1.25;font-weight:700}
+.card p {margin:0 0 15px}.card p:last-child {margin-bottom:0}
+.tag {color:var(--red)}
+.kicker {display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:17px}
+.kicker .micro {letter-spacing:.12em}
+.intro-lead {font-size:16px;line-height:1.75;font-weight:500}
+.small {color:var(--muted);font-size:12px;line-height:1.75}
+.rules {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 21px}
+.rule {background:var(--card);border:1px solid var(--line);padding:12px 13px;border-left:3px solid var(--gold)}
+.rule.danger {border-left-color:var(--red)}
+.rule strong {display:block;font-size:13px;font-weight:700;margin-bottom:3px}
+.rule span {display:block;color:var(--muted);font-size:11px;line-height:1.5}
+.action {display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--red);background:var(--red);color:#fff;border-radius:2px;padding:13px 21px;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;transition:filter .15s,transform .15s}
+.action:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.action:active:not(:disabled){transform:translateY(0)}
+#intro .action,#brief .action {margin-top:2px}
+#brief .story {font-size:16px;line-height:1.8;font-weight:500}
+.separator {border:0;border-top:1px solid var(--line);margin:22px 0}
+#game {display:flex;flex-direction:column;gap:14px}
+.case-bar {padding:12px 15px;border:1px solid var(--line);background:var(--paper);font-size:12px;color:var(--muted);line-height:1.6}
+.case-bar strong {color:var(--ink);font-weight:700}
+.meters {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.meter {background:var(--paper);border:1px solid var(--line);padding:14px 15px 12px;min-width:0}
+.meter-top {display:flex;align-items:baseline;justify-content:space-between;gap:5px;margin-bottom:10px}
+.meter-name {font-size:10px;font-weight:700;letter-spacing:.16em}
+.meter-num {font-size:21px;line-height:1;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.meter-num small {font-size:11px;color:var(--muted);margin-left:2px}
+.bar {height:7px;background:var(--line);overflow:hidden}
+.bar > i {display:block;height:100%;width:0;background:var(--green);transition:width .55s ease,background-color .45s}
+#pb {background:var(--gold)}
+.meter-desc {color:var(--muted);font-size:10px;margin:9px 0 0;line-height:1.45}
+.meter.warning {border-color:var(--red)}
+.meter.warning .meter-name,.meter.warning .meter-num {color:var(--red)}
+#log {min-height:270px;max-height:46vh;overflow-y:auto;overscroll-behavior:contain;background:var(--paper);border:1px solid var(--line);padding:15px;display:flex;flex-direction:column;gap:13px;scrollbar-color:var(--line) transparent}
+.m {padding:13px 15px;max-width:90%;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.75}
+.ai {background:var(--card);border:1px solid var(--line);border-left:3px solid var(--red);align-self:flex-start}
+.me {background:var(--red-faint);border:1px solid transparent;align-self:flex-end}
+.who {display:block;color:var(--muted);font-weight:700;font-size:9px;letter-spacing:.17em;margin-bottom:7px}
+.ai .who {color:var(--red)}
+.ev {font-size:11px;font-weight:500;color:var(--gold);border:1px dashed var(--gold);padding:10px 12px;max-width:90%;align-self:flex-start;overflow-wrap:anywhere}
+.input-row {display:flex;gap:9px;align-items:stretch}
+textarea {width:100%;flex:1;min-width:0;min-height:84px;resize:vertical;padding:12px 14px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:2px;font-size:13px;line-height:1.6}
+textarea::placeholder {color:var(--faint)}
+.input-row .action {min-width:120px}
+.quick-row {display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.quick {background:transparent;border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600;padding:10px 12px;border-radius:2px}
+.quick:hover:not(:disabled){border-color:var(--red);color:var(--red)}
+.hint {margin-left:auto;font-size:10px;color:var(--muted);letter-spacing:.03em}
+#boardC {padding:15px}
+#board {display:flex;flex-direction:column;gap:7px;color:var(--muted);font-size:12px;margin-top:10px}
+#board div::before {content:"— ";color:var(--red)}
+body.dim #log {border-color:var(--red)}
+body.dim .meter:first-child {border-color:var(--red)}
+#err {margin:12px 0 0!important;color:var(--red)}
+/* Full-screen result: the bars are intentionally visible even on small phones. */
+.outcome {position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:22px;isolation:isolate;overflow:auto;color:#f6efe4}
+.outcome-backdrop {position:absolute;inset:0;background:radial-gradient(ellipse at 50% 15%,#48332d 0%,#140f0f 55%,#09090b 100%);z-index:-2}
+.outcome.win .outcome-backdrop {background:radial-gradient(ellipse at 50% 20%,#294a3d,#0c1816 65%,#080d0c)}
+.jail-scene {position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
+.jail-light {position:absolute;inset:-8% -30% 0;background:conic-gradient(from 235deg at 50% -5%,transparent 0deg,rgba(221,147,94,.14) 35deg,transparent 65deg);filter:blur(22px)}
+.jail-bars {position:absolute;inset:0 4%;display:flex;justify-content:space-between;transform:translateY(-105%);animation:bars-drop .8s cubic-bezier(.16,1,.3,1) .06s forwards}
+.jail-bars i {display:block;width:clamp(10px,2.5vw,18px);height:100%;background:linear-gradient(90deg,#020202 0%,#232020 35%,#050505 78%,#000 100%);box-shadow:4px 0 17px rgba(0,0,0,.6)}
+.jail-bars::before,.jail-bars::after {content:"";position:absolute;left:-4%;width:108%;height:19px;background:linear-gradient(#292522,#050505 55%,#211d1c);box-shadow:0 8px 16px #0504048c}
+.jail-bars::before {top:19%}.jail-bars::after {bottom:17%}
+.outcome-content {position:relative;z-index:2;text-align:center;width:min(100%,535px);padding:34px 26px;background:rgba(17,13,13,.9);border:1px solid rgba(240,225,199,.26);box-shadow:0 24px 90px #0009;animation:result-appear .75s .2s backwards}
+.outcome.win .outcome-content {border-color:#568c70}
+.result-icon {display:inline-grid;place-items:center;width:64px;height:64px;border:1px solid #b74e45;border-radius:50%;font-size:29px;color:#eb6255;margin-bottom:12px;font-weight:700}
+.outcome.win .result-icon {border-color:#75c299;color:#75c299}
+.result-label {color:#f18b76;font-size:10px;letter-spacing:.27em;font-weight:700}
+.outcome.win .result-label {color:#93d6b2}
+.outcome h2 {font-size:clamp(29px,7vw,48px);line-height:1.17;letter-spacing:.025em;margin:13px 0;font-weight:800;text-wrap:balance}
+.outcome p {font-size:13px;color:#d1c6b8;margin:0 auto 20px;max-width:43ch;line-height:1.85}
+.result-stats {display:flex;justify-content:center;gap:28px;padding:15px 0;margin:0 0 20px;border-top:1px solid #ffffff2e;border-bottom:1px solid #ffffff2e}
+.result-stats span {display:flex;flex-direction:column;gap:2px;align-items:center;color:#bfb5a9;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.result-stats strong {font-size:20px;line-height:1.3;color:#fff;font-weight:700;letter-spacing:0}
+.outcome .action {min-width:205px}
+@keyframes bars-drop {0%{transform:translateY(-105%)}70%{transform:translateY(2%)}100%{transform:translateY(0)}}
+@keyframes result-appear {from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@media (min-width:700px) {header{margin-bottom:30px}#log{min-height:300px} .wrap{padding-top:38px}}
+@media (max-width:550px) {
+  .wrap{width:calc(100% - 28px);padding-top:17px}
+  header{margin-bottom:17px;padding-bottom:20px}
+  .topline{margin-bottom:20px}
+  .card{padding:17px}
+  .rules{grid-template-columns:1fr}
+  .meter{padding:11px 10px}
+  .meter-name{font-size:9px;letter-spacing:.07em}
+  .meter-num{font-size:19px}
+  .meter-desc{font-size:9px}
+  #log{max-height:46vh;min-height:240px;padding:12px}
+  .m{max-width:96%;padding:10px 12px;font-size:12px}
+  .input-row {flex-direction:column}
+  .input-row .action {width:100%;min-height:44px}
+  textarea {min-height:76px}
+  .hint {display:none}
+  .outcome{padding:14px}
+  .outcome-content{padding:24px 16px}
+  .jail-bars{inset:0 -2%}
+}
+@media (prefers-reduced-motion:reduce) {*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>THE <span>INTERROGATION</span></h1>
-<p class="sub">Tu esi nevainīgs. Vai tiešām?</p>
+<header>
+  <div class="topline">
+    <span class="micro"><span class="red-dot"></span>KONFIDENCIĀLI / LIETAS MATERIĀLI</span>
+    <button class="theme-button" id="theme" type="button" aria-label="Pārslēgt krāsu režīmu">◐ TUMŠAIS REŽĪMS</button>
+  </div>
+  <h1>THE <span>INTERROGATION</span></h1>
+  <p class="sub">PRATINĀŠANAS ISTABA · TU ESI NEVAINĪGS · VIŅŠ TAM NETIC</p>
+</header>
 
-<div id="intro" class="card">
-<p>Tevi ieved telpā bez logiem. Uz galda deg viena lampa. Pretī sēž izmeklētājs Vilks. Viņš zina, ka to izdarīji tu.</p>
-<p class="small">Tev jāpierāda sava nevainība: jāpaliek mierīgam, jāpretrunā pašam sev nekad un jāneļauj sevi ievilkt viņa stāstā. Jo ilgāk tu esi telpā, jo grūtāk ir izkļūt. Ja ticamība nokrītas līdz nullei vai tu atzīsties, tu esi zaudējis.</p>
-<button class="main" id="go">SĀKT</button>
-<p class="small hide" id="err"></p>
+<section id="intro" class="card" aria-labelledby="intro-heading">
+  <div class="kicker"><span class="tag">NOPRATINĀŠANAS PROTOKOLS</span><span class="micro">STATUSS: AIZDOMĀS TURĒTAIS</span></div>
+  <h2 class="card-title" id="intro-heading">Viena telpa. Viens izmeklētājs. Tavi vārdi.</h2>
+  <p class="intro-lead">Tevi ieved telpā bez logiem. Virs galda karājas lampa. Pretī sēž izmeklētājs Vilks. Viņš ir pārliecināts, ka tu melo.</p>
+  <p class="small">Tu neko neesi izdarījis. Atbildi uz jautājumiem, atceries savu alibi un neļauj Vilkam tevi salauzt. Viņš izmantos katru tavu pretrunu.</p>
+  <div class="rules">
+    <div class="rule danger"><strong>TICAMĪBA — 0%</strong><span>Vilks tev vairs netic. Tevi apcietina.</span></div>
+    <div class="rule danger"><strong>SPIEDIENS — 100%</strong><span>Tu salūzti pratināšanā. Tevi apcietina.</span></div>
+    <div class="rule"><strong>LABAS ATBILDES</strong><span>Paaugstina ticamību un samazina spiedienu.</span></div>
+    <div class="rule"><strong>UZVARA</strong><span>Sasniedz 100% ticamību, pirms ir par vēlu.</span></div>
+  </div>
+  <p class="small">Nopratināšanai ir ne vairāk kā 24 gājieni.</p>
+  <button class="action" id="go" type="button">ATVĒRT LIETU <span aria-hidden="true">→</span></button>
+  <p class="small hide" id="err" role="alert"></p>
+</section>
+
+<section id="brief" class="card hide" aria-labelledby="bt">
+  <div class="kicker"><span class="tag">LIETAS MAPE</span><span class="micro">IZMEKLĒTĀJS: VILKS</span></div>
+  <h2 class="card-title" id="bt"></h2>
+  <p class="story" id="bs"></p>
+  <hr class="separator">
+  <p class="small">Tevi aizturēja un nogādāja nopratināšanai. Tu zini, ka neesi vainīgs, bet pierādījumi izskatās slikti.</p>
+  <button class="action" id="enter" type="button">IEIET NOPRATINĀŠANAS TELPĀ <span aria-hidden="true">→</span></button>
+</section>
+
+<main id="game" class="hide">
+  <div class="case-bar" id="case"></div>
+  <div class="meters" aria-label="Spēles rādītāji">
+    <div class="meter" id="cred-meter">
+      <div class="meter-top"><span class="meter-name">TICAMĪBA</span><span class="meter-num"><span id="cv">50</span><small>%</small></span></div>
+      <div class="bar" role="progressbar" aria-label="Ticamība" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" id="cred-bar"><i id="cb"></i></div>
+      <p class="meter-desc">0% — apcietināšana</p>
+    </div>
+    <div class="meter" id="pressure-meter">
+      <div class="meter-top"><span class="meter-name">SPIEDIENS</span><span class="meter-num"><span id="pv">0</span><small>%</small></span></div>
+      <div class="bar" role="progressbar" aria-label="Spiediens" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pressure-bar"><i id="pb"></i></div>
+      <p class="meter-desc">100% — tu salūzti</p>
+    </div>
+  </div>
+  <div id="log" role="log" aria-label="Nopratināšanas saruna" aria-live="polite" aria-relevant="additions"></div>
+  <div class="input-row">
+    <textarea id="inp" rows="2" maxlength="500" placeholder="Tava atbilde…" aria-label="Tava atbilde Vilkam"></textarea>
+    <button class="action" id="send" type="button">ATBILDĒT <span aria-hidden="true">→</span></button>
+  </div>
+  <div class="quick-row">
+    <button class="quick" id="law" type="button">Pieprasīt advokātu</button>
+    <button class="quick" id="deny" type="button">Es to nedarīju.</button>
+    <span class="hint">ENTER — SŪTĪT · SHIFT + ENTER — JAUNA RINDA</span>
+  </div>
+  <aside class="card hide" id="boardC"><span class="tag">LIETAS MATERIĀLI</span><div id="board"></div></aside>
+</main>
 </div>
 
-<div id="brief" class="card hide">
-<span class="tag">LIETAS MAPE</span>
-<h2 id="bt" style="margin:6px 0 10px"></h2>
-<p class="story" id="bs"></p>
-<p class="small">Tevi aizturēja un nogādāja nopratināšanai. Tu zini, ka neesi vainīgs, bet pierādījumi izskatās slikti.</p>
-<button class="main" id="enter">IEIET NOPRATINĀŠANAS TELPĀ</button>
-</div>
-
-<div id="game" class="hide">
-<div class="card" id="case"></div>
-<div class="meters">
-<div>TICAMĪBA <span id="cv">50</span><div class="bar"><i id="cb"></i></div></div>
-<div>SPIEDIENS <span id="pv">0</span><div class="bar"><i id="pb" style="background:var(--acc)"></i></div></div>
-</div>
-<div id="log" class="card" aria-live="polite"></div>
-<div class="row">
-<textarea id="inp" rows="2" maxlength="500" placeholder="Tava atbilde…"></textarea>
-<button class="main" id="send">ATBILDĒT</button>
-</div>
-<div class="row"><button id="law" class="small">Pieprasīt advokātu</button><button id="deny" class="small">Es to nedarīju.</button></div>
-<div class="card hide" id="boardC"><span class="small">LIETAS MATERIĀLI</span><div id="board"></div></div>
-</div>
-
-<div id="over" class="card end hide">
-<h2 id="ot"></h2><p id="od"></p><button class="main" id="again">NOPRATINĀŠANA NO JAUNA</button>
-</div>
-</div>
+<section class="outcome hide" id="outcome" role="dialog" aria-modal="true" aria-labelledby="ot" aria-describedby="od">
+  <div class="outcome-backdrop"></div>
+  <div class="jail-scene" aria-hidden="true">
+    <div class="jail-light"></div>
+    <div class="jail-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="outcome-content">
+    <div class="result-icon" id="result-icon" aria-hidden="true">✕</div>
+    <span class="result-label" id="result-label">IZMEKLĒŠANA PABEIGTA</span>
+    <h2 id="ot">TU TIEC APCIETINĀTS</h2>
+    <p id="od"></p>
+    <div class="result-stats">
+      <span>TICAMĪBA<strong id="end-cred">0%</strong></span>
+      <span>SPIEDIENS<strong id="end-pressure">0%</strong></span>
+      <span>GĀJIENI<strong id="end-turn">0</strong></span>
+    </div>
+    <button class="action" id="again" type="button">MĒĢINĀT VĒLREIZ <span aria-hidden="true">↻</span></button>
+  </div>
+</section>
 
 <script>
-const $=i=>document.getElementById(i);
-let CASE,msgs,cred,turn,busy,skip=false;
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const $ = id => document.getElementById(id);
+let CASE, msgs, cred = 50, pressure = 0, turn = 0, busy = false, skip = false, ended = false;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-function add(cls,txt,who){
-  const d=document.createElement("div");d.className="m "+cls;
-  if(who){const w=document.createElement("span");w.className="who";w.textContent=who;d.appendChild(w)}
-  const t=document.createElement("span");d.appendChild(t);
-  $("log").appendChild(d);$("log").scrollTop=1e9;return t;
-}
-function typeOut(el,txt){
-  return new Promise(res=>{let i=0;skip=false;
-    (function n(){if(skip||i>=txt.length){el.textContent=txt;$("log").scrollTop=1e9;return res()}
-      el.textContent=txt.slice(0,++i);$("log").scrollTop=1e9;setTimeout(n,14)})();
+// The original backend endpoint and request format are preserved.
+async function api() {
+  const r = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: CASE.id, msgs })
   });
-}
-function paint(){
-  const p=clamp(14+turn*5+(cred<40?18:0),0,100);
-  $("cv").textContent=cred;$("pv").textContent=p;
-  $("cb").style.width=cred+"%";$("cb").style.background=cred<35?"var(--acc)":cred<65?"var(--lamp)":"var(--ok)";
-  $("pb").style.width=p+"%";
-  document.body.classList.toggle("dim",cred<35);
-}
-function lock(v){busy=v;["send","law","deny","inp"].forEach(i=>$(i).disabled=v)}
-
-async function api(){
-  const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:CASE.id,msgs})});
-  let j={};try{j=await r.json()}catch(e){}
-  if(!r.ok)throw new Error(j.error||"Servera kļūda");
+  let j = {};
+  try { j = await r.json(); } catch (e) {}
+  if (!r.ok) throw new Error(j.error || "Servera kļūda");
   return j;
 }
-async function ask(text){
-  lock(true);
-  msgs.push({role:"user",content:text});
-  const wait=add("ai","Vilks lūkojas uz tevi…","VILKS");
-  let o;
-  try{o=await api()}
-  catch(e){
-    msgs.pop();wait.parentNode.remove();
-    add("ai","Vilks uz brīdi apklusa: "+e.message+" Mēģini vēlreiz.","SISTĒMA");
-    lock(false);return;
+
+function add(cls, txt, who) {
+  const d = document.createElement("div");
+  d.className = "m " + cls;
+  if (who) {
+    const w = document.createElement("span");
+    w.className = "who";
+    w.textContent = who;
+    d.appendChild(w);
   }
-  msgs.push({role:"assistant",content:JSON.stringify(o)});
-  await typeOut(wait,o.say);
-  if(o.evidence&&o.evidence.trim()){
-    const e=document.createElement("div");e.className="ev";e.textContent="📎 "+o.evidence;$("log").appendChild(e);
-    const b=document.createElement("div");b.textContent="• "+o.evidence;$("board").appendChild(b);$("boardC").classList.remove("hide");
-  }
-  if(turn>0){
-    let d=clamp(Math.round(+o.delta||0),-20,12);
-    if(d>0)d=Math.round(d*Math.max(.35,1-turn*.05));
-    cred=clamp(cred+d-(turn>3?1:0),0,100);
-    if(cred>=100&&turn<6)cred=92;
-    paint();
-    if(o.confessed)return finish("lose","Tu atzinies.","Tu to nedarīji, bet tagad tas ir ierakstīts protokolā. Vilks aizver mapi un pasmaida.");
-    if(cred<=0)return finish("lose","Tu parakstīji.","Tu vairs nezināji, kas bija patiesība. Vilks pasniedza pildspalvu, un tu to paņēmi.");
-    if(cred>=100)return finish("win","Durvis atveras.","Vilks noliec skatienu: „Šoreiz tev ir veicies.“ Tu izej gaitenī un tikai tad saproti, ka rokas joprojām trīc. Vai viņš tiešām tev noticēja?");
-    if(turn>=24)return finish("lose","Tevi aizved.","Laiks beidzās, un Vilks neticēja. Tevi paturēs apcietinājumā līdz tiesai.");
-  }
-  lock(false);$("inp").focus();
+  const t = document.createElement("span");
+  t.textContent = txt;
+  d.appendChild(t);
+  $("log").appendChild(d);
+  $("log").scrollTop = $("log").scrollHeight;
+  return t;
 }
-function finish(k,t,d){
-  lock(true);$("over").classList.remove("hide");$("over").scrollIntoView({behavior:"smooth"});
-  $("ot").textContent=t;$("ot").style.color=k==="win"?"var(--ok)":"var(--acc)";
-  $("od").textContent=d+" (Gājieni: "+turn+")";document.body.classList.remove("dim");
+
+function typeOut(el, txt) {
+  return new Promise(resolve => {
+    let i = 0;
+    skip = false;
+    (function next() {
+      if (skip || i >= txt.length) {
+        el.textContent = txt;
+        $("log").scrollTop = $("log").scrollHeight;
+        return resolve();
+      }
+      el.textContent = txt.slice(0, ++i);
+      $("log").scrollTop = $("log").scrollHeight;
+      setTimeout(next, 14);
+    })();
+  });
 }
-function send(text){
-  if(busy||!text)return;
-  add("me",text,"TU");turn++;
-  ask(`[gājiens ${turn}, ticamība ${cred}/100] ${text}`);
+
+function paint() {
+  $("cv").textContent = cred;
+  $("pv").textContent = pressure;
+  $("cb").style.width = cred + "%";
+  $("pb").style.width = pressure + "%";
+  $("cb").style.backgroundColor = cred <= 35 ? "var(--red)" : cred < 65 ? "var(--gold)" : "var(--green)";
+  $("pb").style.backgroundColor = pressure >= 65 ? "var(--red)" : "var(--gold)";
+  $("cred-bar").setAttribute("aria-valuenow", cred);
+  $("pressure-bar").setAttribute("aria-valuenow", pressure);
+  $("cred-meter").classList.toggle("warning", cred <= 35);
+  $("pressure-meter").classList.toggle("warning", pressure >= 65);
+  document.body.classList.toggle("dim", cred <= 35 || pressure >= 75);
 }
-async function loadCase(){
-  $("go").disabled=true;$("err").classList.add("hide");
-  try{
-    const r=await fetch("/api/case");if(!r.ok)throw 0;
-    CASE=await r.json();
-    $("bt").textContent=CASE.title;$("bs").textContent=CASE.story;
-    $("intro").classList.add("hide");$("brief").classList.remove("hide");
-  }catch(e){
-    $("err").textContent="Neizdevās ielādēt lietu. Pārbaudi, vai serveris darbojas.";$("err").classList.remove("hide");
-  }
-  $("go").disabled=false;
+
+function lock(yes) {
+  busy = yes;
+  ["send", "law", "deny", "inp"].forEach(id => $(id).disabled = yes);
 }
-async function enter(){
-  cred=50;turn=0;msgs=[];
-  $("brief").classList.add("hide");$("over").classList.add("hide");$("game").classList.remove("hide");
-  $("log").textContent="";$("board").textContent="";$("boardC").classList.add("hide");
-  $("case").innerHTML="<b>LIETA:</b> ";$("case").appendChild(document.createTextNode(CASE.title+". "+CASE.story));
+
+// Credibility represents the detective's belief; pressure is the player's stress.
+// A credible answer can reduce pressure, while evasive answers and long interrogations raise it.
+function applyAnswer(delta) {
+  let d = clamp(Math.round(Number(delta) || 0), -20, 12);
+  if (d > 0) d = Math.round(d * Math.max(.35, 1 - turn * .05));
+  const stressPenalty = pressure >= 70 ? 1 : 0;
+  cred = clamp(cred + d - (turn > 3 ? 1 : 0) - stressPenalty, 0, 100);
+  if (cred >= 100 && turn < 6) cred = 92;
+  const change = 5 + Math.round(Math.max(0, -d) * 1.25) - Math.round(Math.max(0, d) * 1.1);
+  pressure = clamp(pressure + change, 0, 100);
   paint();
-  await ask("[gājiens 0, ticamība 50/100] Spēle sākas. Spēlētājs tikko tika ievests telpā. Sāc nopratināšanu: īsi uzsāc sarunu un uzdod pirmo jautājumu.");
 }
-$("go").onclick=loadCase;
-$("enter").onclick=enter;
-$("again").onclick=()=>{$("game").classList.add("hide");$("over").classList.add("hide");$("intro").classList.remove("hide");paint()};
-$("send").onclick=()=>{const v=$("inp").value.trim();$("inp").value="";send(v)};
-$("inp").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("send").click()}});
-$("law").onclick=()=>send("Es pieprasu advokātu.");
-$("deny").onclick=()=>send("Es to nedarīju.");
-$("log").addEventListener("click",()=>{skip=true});
+
+async function ask(text, isOpening = false, userBubble = null) {
+  lock(true);
+  msgs.push({ role: "user", content: text });
+  const waiting = add("ai", "Vilks lūkojas uz tevi…", "IZMEKLĒTĀJS VILKS");
+  let o;
+  try {
+    o = await api();
+  } catch (e) {
+    msgs.pop();
+    waiting.parentNode.remove();
+    if (userBubble) userBubble.remove();
+    add("ai", "Savienojums pārtrūka: " + e.message + " Mēģini vēlreiz.", "SISTĒMA");
+    if (!isOpening) {
+      // Keep the submitted answer available, so the player can retry without losing it.
+      turn--;
+      $("inp").value = text.replace(/^\[gājiens \d+, ticamība \d+\/100, spiediens \d+\/100\] /, "");
+    }
+    lock(false);
+    return;
+  }
+  msgs.push({ role: "assistant", content: JSON.stringify(o) });
+  await typeOut(waiting, String(o.say || "…"));
+  if (o.evidence && o.evidence.trim()) {
+    const evidence = document.createElement("div");
+    evidence.className = "ev";
+    evidence.textContent = "PIERĀDĪJUMS: " + o.evidence;
+    $("log").appendChild(evidence);
+    const item = document.createElement("div");
+    item.textContent = o.evidence;
+    $("board").appendChild(item);
+    $("boardC").classList.remove("hide");
+    $("log").scrollTop = $("log").scrollHeight;
+  }
+  if (!isOpening) {
+    applyAnswer(o.delta);
+    if (o.confessed) return finish("lose", "confession");
+    if (cred <= 0) return finish("lose", "credibility");
+    if (pressure >= 100) return finish("lose", "pressure");
+    if (cred >= 100) return finish("win", "cleared");
+    if (turn >= 24) return finish("lose", "timeout");
+  }
+  lock(false);
+  $("inp").focus();
+}
+
+function finish(result, reason) {
+  if (ended) return;
+  ended = true;
+  lock(true);
+  const win = result === "win";
+  const descriptions = {
+    credibility: "Tava ticamība nokritās līdz 0%. Vilks vairs netic nevienam tavam vārdam. Durvis atveras, un tevi aizved prom.",
+    pressure: "Spiediens sasniedza 100%. Tu vairs nespēji izturēt pratināšanu. Vilks aizver lietas mapi, un tevi aizved prom.",
+    confession: "Tu atzinies noziegumā, kuru neizdarīji. Vilks ieraksta atzīšanos protokolā, un tevi apcietina.",
+    timeout: "Nopratināšana ieilgusi, un Vilks tevi nepalaidīs. Tevi patur apcietinājumā.",
+    cleared: "Tu spēji saglabāt savu stāstu un pārliecināt Vilku. Durvis atveras. Šoreiz tu vari doties mājās."
+  };
+  $("ot").textContent = win ? "TU ESI BRĪVS" : "TU TIEC APCIETINĀTS";
+  $("od").textContent = descriptions[reason] || descriptions.timeout;
+  $("end-cred").textContent = cred + "%";
+  $("end-pressure").textContent = pressure + "%";
+  $("end-turn").textContent = turn;
+  $("result-icon").textContent = win ? "✓" : "✕";
+  $("result-label").textContent = win ? "LIETA SLĒGTA / ATBRĪVOTS" : "LIETA SLĒGTA / APCIETINĀTS";
+  $("outcome").classList.toggle("win", win);
+  $("outcome").classList.remove("hide");
+  document.body.style.overflow = "hidden";
+  $("again").focus();
+}
+
+function send(text) {
+  if (busy || ended || !text.trim()) return;
+  const answer = text.trim();
+  const bubbleText = add("me", answer, "TU");
+  turn++;
+  ask(`[gājiens ${turn}, ticamība ${cred}/100, spiediens ${pressure}/100] ${answer}`, false, bubbleText.parentNode);
+}
+
+async function loadCase() {
+  $("go").disabled = true;
+  $("err").classList.add("hide");
+  try {
+    const r = await fetch("/api/case");
+    if (!r.ok) throw new Error("Serveris neatbild");
+    CASE = await r.json();
+    $("bt").textContent = CASE.title;
+    $("bs").textContent = CASE.story;
+    $("intro").classList.add("hide");
+    $("brief").classList.remove("hide");
+  } catch (e) {
+    $("err").textContent = "Neizdevās ielādēt lietu. Pārbaudi, vai serveris darbojas.";
+    $("err").classList.remove("hide");
+  } finally {
+    $("go").disabled = false;
+  }
+}
+
+function enter() {
+  cred = 50;
+  pressure = 0;
+  turn = 0;
+  msgs = [];
+  ended = false;
+  $("brief").classList.add("hide");
+  $("game").classList.remove("hide");
+  $("log").textContent = "";
+  $("board").textContent = "";
+  $("boardC").classList.add("hide");
+  $("inp").value = "";
+  $("case").innerHTML = "<strong>LIETA:</strong> ";
+  $("case").appendChild(document.createTextNode(CASE.title + ". " + CASE.story));
+  paint();
+  ask("[gājiens 0, ticamība 50/100, spiediens 0/100] Spēle sākas. Spēlētājs tikko tika ievests telpā. Sāc nopratināšanu: īsi uzsāc sarunu un uzdod pirmo jautājumu.", true);
+}
+
+function restart() {
+  document.body.style.overflow = "";
+  document.body.classList.remove("dim");
+  $("outcome").classList.add("hide");
+  $("game").classList.add("hide");
+  $("brief").classList.add("hide");
+  $("intro").classList.remove("hide");
+  cred = 50;
+  pressure = 0;
+  turn = 0;
+  busy = false;
+  ended = false;
+  paint();
+  window.scrollTo({ top: 0, behavior: "instant" });
+  $("go").focus();
+}
+
+function toggleTheme() {
+  const dark = document.documentElement.dataset.theme !== "dark";
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  $("theme").textContent = dark ? "◐ GAIŠAIS REŽĪMS" : "◐ TUMŠAIS REŽĪMS";
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#13110f" : "#eae3d7";
+  try { localStorage.setItem("interrogation-theme", dark ? "dark" : "light"); } catch (e) {}
+}
+try {
+  if (localStorage.getItem("interrogation-theme") === "dark") {
+    document.documentElement.dataset.theme = "dark";
+    $("theme").textContent = "◐ GAIŠAIS REŽĪMS";
+    document.querySelector('meta[name="theme-color"]').content = "#13110f";
+  }
+} catch (e) {}
+$("go").addEventListener("click", loadCase);
+$("enter").addEventListener("click", enter);
+$("again").addEventListener("click", restart);
+$("theme").addEventListener("click", toggleTheme);
+$("send").addEventListener("click", () => {
+  const text = $("inp").value.trim();
+  if (!text) return;
+  $("inp").value = "";
+  send(text);
+});
+$("inp").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("send").click(); }
+});
+$("law").addEventListener("click", () => send("Es pieprasu advokātu."));
+$("deny").addEventListener("click", () => send("Es to nedarīju."));
+$("log").addEventListener("click", () => { skip = true; });
 </script>
 </body>
 </html>
